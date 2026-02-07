@@ -12,10 +12,10 @@ export default function HomePage() {
             ApexBet
           </Link>
           <nav className="flex flex-col sm:flex-row gap-1 sm:gap-4 w-full sm:w-auto items-center">
-            <Link href="/auth/login" className="text-apex-primary hover:underline w-full sm:w-auto text-center text-sm sm:text-base">
+            <Link href="/auth/login" className="text-apex-primary hover:underline text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
               Login
             </Link>
-            <Link href="/auth/register" className="btn-primary w-full sm:w-auto text-center text-sm sm:text-base">
+            <Link href="/auth/register" className="btn-primary text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
               Register
             </Link>
           </nav>
