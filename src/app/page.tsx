@@ -8,17 +8,19 @@ export default function HomePage() {
     <main className="min-h-screen bg-gradient-to-b from-apex-dark to-apex-card">
       <header className="border-b border-apex-muted/50">
         <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
-          <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-bold text-apex-primary text-center sm:text-left w-full sm:w-auto">
-            ApexBet
-          </Link>
-          <nav className="flex flex-col sm:flex-row gap-1 sm:gap-4 w-full sm:w-auto items-center">
-            <Link href="/auth/login" className="text-apex-primary hover:underline text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
-              Login
+          <div className="flex flex-row w-full items-center justify-between">
+            <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-bold text-apex-primary text-center sm:text-left">
+              ApexBet
             </Link>
-            <Link href="/auth/register" className="btn-primary text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
-              Register
-            </Link>
-          </nav>
+            <nav className="flex flex-row gap-1 sm:gap-4 items-center">
+              <Link href="/auth/login" className="text-apex-primary hover:underline text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
+                Login
+              </Link>
+              <Link href="/auth/register" className="btn-primary text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
+                Register
+              </Link>
+            </nav>
+          </div>
         </div>
       </header>
       <section className="container mx-auto px-2 sm:px-4 py-6 sm:py-12 text-center">
