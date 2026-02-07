@@ -46,13 +46,13 @@ export default function HomePage() {
         >
           <Link
             href="/sports"
-            className="btn-primary text-xs sm:text-base md:text-lg px-3 sm:px-6 py-1.5 sm:py-3 rounded-xl w-full sm:w-auto"
+            className="btn-primary text-xs sm:text-base md:text-lg px-4 sm:px-6 py-1.5 sm:py-3 rounded-xl whitespace-nowrap"
           >
             View Sports
           </Link>
           <Link
             href="/jackpots"
-            className="bg-apex-muted hover:bg-apex-primary/20 text-white border border-apex-primary px-3 sm:px-6 py-1.5 sm:py-3 rounded-xl text-xs sm:text-base md:text-lg w-full sm:w-auto"
+            className="bg-apex-muted hover:bg-apex-primary/20 text-white border border-apex-primary px-4 sm:px-6 py-1.5 sm:py-3 rounded-xl text-xs sm:text-base md:text-lg whitespace-nowrap"
           >
             Jackpots
           </Link>
