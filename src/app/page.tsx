@@ -39,7 +39,7 @@ export default function HomePage() {
           Premier sportsbook. Football, Basketball, Tennis, Live betting & Jackpots.
         </motion.p>
         <motion.div
-          className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-4"
+          className="flex flex-row flex-wrap justify-center gap-2 sm:gap-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
