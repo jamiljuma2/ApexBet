@@ -19,15 +19,15 @@ export default async function LivePage() {
     .eq('is_live', true)
     .order('start_time');
   return (
-    <div className="min-h-screen bg-apex-dark p-4">
+    <div className="min-h-screen bg-apex-dark p-2 sm:p-4">
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-4">Live betting</h1>
-        <div className="space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center sm:text-left">Live betting</h1>
+        <div className="space-y-4 sm:space-y-6">
           {events?.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
           {(!events || events.length === 0) && (
-            <p className="text-gray-500">No live events right now.</p>
+            <p className="text-gray-500 text-center">No live events right now.</p>
           )}
         </div>
       </div>

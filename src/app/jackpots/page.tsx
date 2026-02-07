@@ -10,14 +10,14 @@ export default async function JackpotsPage() {
     .in('status', ['open', 'closed'])
     .order('created_at', { ascending: false });
   return (
-    <div className="min-h-screen bg-apex-dark p-4">
+    <div className="min-h-screen bg-apex-dark p-2 sm:p-4">
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-4">Jackpots</h1>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center sm:text-left">Jackpots</h1>
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 xs:grid-cols-2 md:grid-cols-3">
           {jackpots?.map((jp) => (
-            <div key={jp.id} className="card-apex">
-              <h2 className="text-lg font-semibold text-apex-primary">{jp.name}</h2>
-              <p className="text-2xl font-bold text-white mt-1">
+            <div key={jp.id} className="card-apex p-4 sm:p-6 text-center sm:text-left">
+              <h2 className="text-lg sm:text-xl font-semibold text-apex-primary">{jp.name}</h2>
+              <p className="text-2xl sm:text-3xl font-bold text-white mt-1">
                 KES {Number(jp.prize_kes).toLocaleString()}
               </p>
               <p className="text-gray-400 text-sm">Entry: KES {Number(jp.entry_fee_kes).toLocaleString()}</p>
@@ -35,7 +35,7 @@ export default async function JackpotsPage() {
             </div>
           ))}
           {(!jackpots || jackpots.length === 0) && (
-            <p className="text-gray-500">No jackpots at the moment.</p>
+            <p className="text-gray-500 text-center">No jackpots at the moment.</p>
           )}
         </div>
       </div>
