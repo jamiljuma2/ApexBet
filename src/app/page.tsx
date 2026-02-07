@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-apex-dark to-apex-card">
+    <main className="min-h-screen flex flex-col bg-gradient-to-b from-apex-dark to-apex-card">
       <header className="border-b border-apex-muted/50">
         <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
           <div className="flex flex-row w-full items-center justify-between">
@@ -60,7 +60,7 @@ export default function HomePage() {
           </Link>
         </motion.div>
       </section>
-    <footer className="w-full py-4 mt-8 text-center text-xs text-gray-400 bg-transparent">
+    <footer className="w-full py-4 text-center text-xs text-gray-400 bg-transparent mt-auto">
       &copy; {new Date().getFullYear()} ApexBet. All rights reserved.
     </footer>
     </main>
