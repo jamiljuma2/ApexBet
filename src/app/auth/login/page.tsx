@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+const ADMIN_ROLES = ['super_admin', 'risk_manager', 'finance_admin', 'support_agent'];
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,14 +19,33 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
       setMessage({ type: 'err', text: error.message });
       return;
     }
+    // Fetch profile to check role
+    const user = data?.user;
+    if (!user) {
+      setMessage({ type: 'err', text: 'User not found after login.' });
+      return;
+    }
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    if (profileError || !profile) {
+      setMessage({ type: 'err', text: 'Could not fetch user profile.' });
+      return;
+    }
     setMessage({ type: 'ok', text: 'Logged in. Redirecting...' });
-    router.push('/dashboard');
+    if (ADMIN_ROLES.includes(profile.role)) {
+      router.push('/admin');
+    } else {
+      router.push('/dashboard');
+    }
     router.refresh();
   }
 
