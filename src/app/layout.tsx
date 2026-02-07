@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers/Providers';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({
   variable: '--font-sans',
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <Providers>{children}</Providers>
+        <SpeedInsights />
       </body>
     </html>
   );
