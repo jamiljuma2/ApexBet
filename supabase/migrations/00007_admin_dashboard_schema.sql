@@ -1,4 +1,6 @@
 -- Admin Dashboard Schema for Sports Betting Platform
+-- Ensure events table is dropped and recreated locally
+DROP TABLE IF EXISTS events CASCADE;
 -- All tables, indexes, and RLS policies for admin modules
 
 -- 1. Users & Wallets
@@ -215,3 +217,52 @@ CREATE INDEX IF NOT EXISTS idx_risk_flags_user_id ON risk_flags(user_id);
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY admin_select_users ON users FOR SELECT USING (auth.role() IN ('admin', 'super_admin'));
 -- (Repeat for all tables and actions as required)
+
+
+-- 9. Wallet Transaction Trigger Function & Triggers
+-- Unified handler for wallet-affecting actions (deposits, withdrawals, bets, refunds, etc.)
+
+-- 1. Drop any existing trigger referencing deposit_wallet_trigger
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_trigger t
+    JOIN pg_proc p ON t.tgfoid = p.oid
+    WHERE t.tgrelid = 'deposits'::regclass
+      AND p.proname = 'deposit_wallet_trigger'
+  ) THEN
+    EXECUTE 'DROP TRIGGER IF EXISTS deposit_completed_trigger ON deposits;';
+  END IF;
+END$$;
+
+-- 2. Create the handler function
+CREATE OR REPLACE FUNCTION handle_wallet_transaction(user_id uuid, tx_type text, tx_amount numeric, ref_id uuid) RETURNS void AS $$
+BEGIN
+  -- Credit or debit wallet
+  IF tx_type = 'deposit' THEN
+    UPDATE wallets SET balance = balance + tx_amount, updated_at = now() WHERE user_id = user_id;
+  ELSIF tx_type = 'withdrawal' THEN
+    UPDATE wallets SET balance = balance - tx_amount, updated_at = now() WHERE user_id = user_id;
+  END IF;
+  -- Log transaction
+  INSERT INTO wallet_transactions(user_id, type, amount, ref_id, created_at) VALUES (user_id, tx_type, tx_amount, ref_id, now());
+END;
+$$ LANGUAGE plpgsql;
+
+-- 3. Create the deposit_wallet_trigger function
+CREATE OR REPLACE FUNCTION deposit_wallet_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.status = 'completed' THEN
+    PERFORM handle_wallet_transaction(NEW.user_id, 'deposit', NEW.amount, NEW.id);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 4. Create the trigger
+CREATE TRIGGER deposit_completed_trigger
+AFTER INSERT ON deposits
+FOR EACH ROW
+WHEN (NEW.status = 'completed')
+EXECUTE FUNCTION deposit_wallet_trigger();
