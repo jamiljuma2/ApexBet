@@ -1,42 +1,100 @@
-import { createClient } from '@/lib/supabase/server';
-import { format } from 'date-fns';
+"use client";
+import React, { useState } from 'react';
+import AdminLayout from '@/components/admin/AdminLayout';
+import AdminTable from '@/components/admin/AdminTable';
+import StatusBadge from '@/components/admin/StatusBadge';
+import ConfirmModal from '@/components/admin/ConfirmModal';
 
-export default async function AdminTransactionsPage() {
-  const supabase = await createClient();
-  const { data: txns } = await supabase
-    .from('transactions')
-    .select('id, user_id, type, amount_kes, status, created_at')
-    .order('created_at', { ascending: false })
-    .limit(100);
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-white mb-4">Transactions</h1>
-      <div className="overflow-x-auto card-apex">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-gray-400 border-b border-apex-muted">
-              <th className="pb-2 pr-4">Date</th>
-              <th className="pb-2 pr-4">User</th>
-              <th className="pb-2 pr-4">Type</th>
-              <th className="pb-2 pr-4">Amount (KES)</th>
-              <th className="pb-2 pr-4">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {txns?.map((t) => (
-              <tr key={t.id} className="border-b border-apex-muted/50">
-                <td className="py-2 pr-4 text-gray-500">{format(new Date(t.created_at), 'd MMM yyyy, HH:mm')}</td>
-                <td className="py-2 pr-4 text-gray-400 font-mono text-xs">{t.user_id.slice(0, 8)}</td>
-                <td className="py-2 pr-4 text-white">{t.type}</td>
-                <td className={`py-2 pr-4 ${t.amount_kes >= 0 ? 'text-apex-primary' : 'text-red-400'}`}>
-                  {Number(t.amount_kes).toLocaleString()}
-                </td>
-                <td className="py-2 pr-4 text-gray-400">{t.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+interface TransactionRow {
+  id: string;
+  user: string;
+  amount: string;
+  type: 'deposit' | 'withdrawal';
+  status: 'pending' | 'approved' | 'failed';
+  date: string;
 }
+
+const deposits: TransactionRow[] = [
+  { id: 'D1001', user: 'user1@mail.com', amount: 'Ksh 2,000', type: 'deposit', status: 'approved', date: '2026-02-07 10:00' },
+  { id: 'D1002', user: 'user2@mail.com', amount: 'Ksh 500', type: 'deposit', status: 'pending', date: '2026-02-07 11:00' },
+];
+
+const withdrawals: TransactionRow[] = [
+  { id: 'W1001', user: 'user3@mail.com', amount: 'Ksh 1,000', type: 'withdrawal', status: 'pending', date: '2026-02-07 09:00' },
+  { id: 'W1002', user: 'user4@mail.com', amount: 'Ksh 3,000', type: 'withdrawal', status: 'failed', date: '2026-02-07 08:30' },
+];
+
+const statusMap = {
+  pending: <StatusBadge status="pending">Pending</StatusBadge>,
+  approved: <StatusBadge status="success">Approved</StatusBadge>,
+  failed: <StatusBadge status="danger">Failed</StatusBadge>,
+};
+
+const TransactionsPage: React.FC = () => {
+  const [modal, setModal] = useState<{ open: boolean; tx?: TransactionRow; action?: string }>({ open: false });
+  return (
+    <AdminLayout>
+      <h1 className="text-xl font-bold mb-4">Transactions & Wallets</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Deposits</h2>
+          <AdminTable
+            columns={[
+              { key: 'id', label: 'ID', className: 'font-mono' },
+              { key: 'user', label: 'User' },
+              { key: 'amount', label: 'Amount', className: 'font-mono' },
+              { key: 'status', label: 'Status' },
+              { key: 'date', label: 'Date' },
+            ]}
+            data={deposits}
+            renderRow={(row) => (
+              <tr key={row.id} className="bg-apex-muted/30 hover:bg-apex-muted/50 transition-colors">
+                <td className="px-3 py-2 font-mono">{row.id}</td>
+                <td className="px-3 py-2">{row.user}</td>
+                <td className="px-3 py-2 font-mono">{row.amount}</td>
+                <td className="px-3 py-2">{statusMap[row.status]}</td>
+                <td className="px-3 py-2">{row.date}</td>
+              </tr>
+            )}
+          />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Withdrawals</h2>
+          <AdminTable
+            columns={[
+              { key: 'id', label: 'ID', className: 'font-mono' },
+              { key: 'user', label: 'User' },
+              { key: 'amount', label: 'Amount', className: 'font-mono' },
+              { key: 'status', label: 'Status' },
+              { key: 'date', label: 'Date' },
+              { key: 'actions', label: 'Actions' },
+            ]}
+            data={withdrawals.map((w) => ({ ...w, actions: '' }))}
+            renderRow={(row) => (
+              <tr key={row.id} className="bg-apex-muted/30 hover:bg-apex-muted/50 transition-colors">
+                <td className="px-3 py-2 font-mono">{row.id}</td>
+                <td className="px-3 py-2">{row.user}</td>
+                <td className="px-3 py-2 font-mono">{row.amount}</td>
+                <td className="px-3 py-2">{statusMap[row.status]}</td>
+                <td className="px-3 py-2">{row.date}</td>
+                <td className="px-3 py-2 flex gap-2">
+                  <button className="text-apex-primary hover:underline text-xs" onClick={() => setModal({ open: true, tx: row, action: 'approve' })} disabled={row.status !== 'pending'}>Approve</button>
+                  <button className="text-red-500 hover:underline text-xs" onClick={() => setModal({ open: true, tx: row, action: 'reject' })} disabled={row.status !== 'pending'}>Reject</button>
+                </td>
+              </tr>
+            )}
+          />
+        </div>
+      </div>
+      <ConfirmModal
+        open={modal.open}
+        title={`Confirm ${modal.action}`}
+        description={`Are you sure you want to ${modal.action} withdrawal ${modal.tx?.id}?`}
+        onCancel={() => setModal({ open: false })}
+        onConfirm={() => setModal({ open: false })}
+      />
+    </AdminLayout>
+  );
+};
+
+export default TransactionsPage;

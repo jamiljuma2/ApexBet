@@ -1,0 +1,4 @@
+### Admin Audit Logs API Test
+GET http://localhost:54321/functions/v1/admin-audit?limit=10&offset=0
+Authorization: Bearer <ADMIN_JWT>
+Accept: application/json

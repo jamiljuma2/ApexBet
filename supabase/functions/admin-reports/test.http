@@ -1,0 +1,4 @@
+### Admin Reports & Analytics API Test
+GET http://localhost:54321/functions/v1/admin-reports?type=DAILY_KPI
+Authorization: Bearer <ADMIN_JWT>
+Accept: application/json

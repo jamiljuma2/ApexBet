@@ -1,39 +1,74 @@
-import { createClient } from '@/lib/supabase/server';
+"use client";
+import React, { useState } from 'react';
+import AdminLayout from '@/components/admin/AdminLayout';
+import AdminTable from '@/components/admin/AdminTable';
+import StatusBadge from '@/components/admin/StatusBadge';
+import ConfirmModal from '@/components/admin/ConfirmModal';
 
-export default async function AdminUsersPage() {
-  const supabase = await createClient();
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, email, phone, full_name, role, created_at')
-    .order('created_at', { ascending: false })
-    .limit(100);
-  return (
-    <div className="px-2 sm:px-4 py-4 max-w-3xl mx-auto">
-      <h1 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 text-center sm:text-left">User management</h1>
-      <div className="overflow-x-auto card-apex p-2 sm:p-4">
-        <table className="w-full text-xs sm:text-sm">
-          <thead>
-            <tr className="text-left text-gray-400 border-b border-apex-muted">
-              <th className="pb-1 sm:pb-2 pr-2 sm:pr-4">Email</th>
-              <th className="pb-1 sm:pb-2 pr-2 sm:pr-4">Phone</th>
-              <th className="pb-1 sm:pb-2 pr-2 sm:pr-4">Name</th>
-              <th className="pb-1 sm:pb-2 pr-2 sm:pr-4">Role</th>
-              <th className="pb-1 sm:pb-2 pr-2 sm:pr-4">Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            {profiles?.map((p) => (
-              <tr key={p.id} className="border-b border-apex-muted/50">
-                <td className="py-1 sm:py-2 pr-2 sm:pr-4 text-white">{p.email ?? '-'}</td>
-                <td className="py-1 sm:py-2 pr-2 sm:pr-4 text-gray-300">{p.phone ?? '-'}</td>
-                <td className="py-1 sm:py-2 pr-2 sm:pr-4 text-gray-300">{p.full_name ?? '-'}</td>
-                <td className="py-1 sm:py-2 pr-2 sm:pr-4 text-apex-primary">{p.role}</td>
-                <td className="py-1 sm:py-2 pr-2 sm:pr-4 text-gray-500">{new Date(p.created_at).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+const ADMIN_USERS_API = '/functions/v1/admin-users';
+
+interface UserRow {
+  id: string;
+  phone: string;
+  email: string;
+  wallet: string;
+  status: 'active' | 'suspended' | 'banned';
 }
+
+const users: UserRow[] = [
+  { id: '1', phone: '+254700000001', email: 'user1@mail.com', wallet: 'Ksh 1,200', status: 'active' },
+  { id: '2', phone: '+254700000002', email: 'user2@mail.com', wallet: 'Ksh 0', status: 'suspended' },
+  { id: '3', phone: '+254700000003', email: 'user3@mail.com', wallet: 'Ksh 5,000', status: 'banned' },
+];
+
+const statusMap = {
+  active: <StatusBadge status="success">Active</StatusBadge>,
+  suspended: <StatusBadge status="pending">Suspended</StatusBadge>,
+  banned: <StatusBadge status="danger">Banned</StatusBadge>,
+};
+
+const UserManagementPage: React.FC = () => {
+  const [modal, setModal] = useState<{ open: boolean; user?: UserRow; action?: string }>({ open: false });
+  return (
+    <AdminLayout>
+      <div className="mb-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <h1 className="text-xl font-bold">User Management</h1>
+        <input className="bg-apex-muted/30 rounded px-3 py-1 text-sm text-white" placeholder="Search users..." />
+      </div>
+      <AdminTable
+        columns={[
+          { key: 'id', label: 'ID', className: 'font-mono' },
+          { key: 'phone', label: 'Phone' },
+          { key: 'email', label: 'Email' },
+          { key: 'wallet', label: 'Wallet', className: 'font-mono' },
+          { key: 'status', label: 'Status' },
+          { key: 'actions', label: 'Actions' },
+        ]}
+        data={users.map((u) => ({ ...u, actions: '' }))}
+        renderRow={(row) => (
+          <tr key={row.id} className="bg-apex-muted/30 hover:bg-apex-muted/50 transition-colors">
+            <td className="px-3 py-2 font-mono">{row.id}</td>
+            <td className="px-3 py-2">{row.phone}</td>
+            <td className="px-3 py-2">{row.email}</td>
+            <td className="px-3 py-2 font-mono">{row.wallet}</td>
+            <td className="px-3 py-2">{statusMap[row.status]}</td>
+            <td className="px-3 py-2 flex gap-2">
+              <button className="text-apex-primary hover:underline text-xs" onClick={() => setModal({ open: true, user: row, action: 'suspend' })} disabled={row.status !== 'active'}>Suspend</button>
+              <button className="text-red-500 hover:underline text-xs" onClick={() => setModal({ open: true, user: row, action: 'ban' })} disabled={row.status === 'banned'}>Ban</button>
+              <button className="text-gray-400 hover:underline text-xs">View</button>
+            </td>
+          </tr>
+        )}
+      />
+      <ConfirmModal
+        open={modal.open}
+        title={`Confirm ${modal.action}`}
+        description={`Are you sure you want to ${modal.action} user ${modal.user?.id}?`}
+        onCancel={() => setModal({ open: false })}
+        onConfirm={() => setModal({ open: false })}
+      />
+    </AdminLayout>
+  );
+};
+
+export default UserManagementPage;
