@@ -24,8 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans min-h-screen flex flex-col`}>
         <Providers>{children}</Providers>
+        <footer className="w-full py-4 text-center text-xs text-gray-400 bg-transparent mt-auto">
+          &copy; {new Date().getFullYear()} ApexBet. All rights reserved.
+        </footer>
       </body>
     </html>
   );
