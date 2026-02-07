@@ -19,24 +19,24 @@ export default async function AdminDashboardPage() {
   const totalStakes = revenue?.reduce((s, t) => s + Math.abs(Number(t.amount_kes)), 0) ?? 0;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-white mb-6">Admin dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="card-apex">
-          <p className="text-gray-400 text-sm">Users</p>
-          <p className="text-2xl font-bold text-apex-primary">{usersCount ?? 0}</p>
+    <div className="px-2 sm:px-4 py-4 max-w-3xl mx-auto">
+      <h1 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center sm:text-left">Admin dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="card-apex p-3 sm:p-4">
+          <p className="text-gray-400 text-xs sm:text-sm">Users</p>
+          <p className="text-xl sm:text-2xl font-bold text-apex-primary">{usersCount ?? 0}</p>
         </div>
-        <div className="card-apex">
-          <p className="text-gray-400 text-sm">Total bets</p>
-          <p className="text-2xl font-bold text-white">{betsCount ?? 0}</p>
+        <div className="card-apex p-3 sm:p-4">
+          <p className="text-gray-400 text-xs sm:text-sm">Total bets</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">{betsCount ?? 0}</p>
         </div>
-        <div className="card-apex">
-          <p className="text-gray-400 text-sm">Transactions</p>
-          <p className="text-2xl font-bold text-white">{txnsCount ?? 0}</p>
+        <div className="card-apex p-3 sm:p-4">
+          <p className="text-gray-400 text-xs sm:text-sm">Transactions</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">{txnsCount ?? 0}</p>
         </div>
-        <div className="card-apex">
-          <p className="text-gray-400 text-sm">Total stakes (KES)</p>
-          <p className="text-2xl font-bold text-apex-primary">{totalStakes.toLocaleString()}</p>
+        <div className="card-apex p-3 sm:p-4">
+          <p className="text-gray-400 text-xs sm:text-sm">Total stakes (KES)</p>
+          <p className="text-xl sm:text-2xl font-bold text-apex-primary">{totalStakes.toLocaleString()}</p>
         </div>
       </div>
     </div>
