@@ -1,26 +1,32 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { createClient } from '@supabase/supabase-js';
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+function setCors(res: NextApiResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'authorization, x-client-info, apikey, content-type');
+}
+
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  setCors(res);
+  if (req.method === 'OPTIONS') {
+    res.status(200).send('ok');
+    return;
+  }
   try {
-    const body = await req.json();
+    const body = req.body;
     const checkoutRequestId = body.Body?.stkCallback?.CheckoutRequestID;
     const resultCode = body.Body?.stkCallback?.ResultCode;
     const callbackMetadata = body.Body?.stkCallback?.CallbackMetadata?.Item;
     if (!checkoutRequestId) {
-      return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: 'OK' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      res.status(200).json({ ResultCode: 0, ResultDesc: 'OK' });
+      return;
     }
     const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
     const existing = await supabase
       .from('mpesa_callbacks')
@@ -28,18 +34,16 @@ serve(async (req) => {
       .eq('checkout_request_id', checkoutRequestId)
       .single();
     if (existing?.data?.processed_at) {
-      return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: 'OK' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      res.status(200).json({ ResultCode: 0, ResultDesc: 'OK' });
+      return;
     }
     if (resultCode !== 0) {
       await supabase
         .from('mpesa_callbacks')
         .update({ status: 'failed', raw_response: body })
         .eq('checkout_request_id', checkoutRequestId);
-      return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: 'OK' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      res.status(200).json({ ResultCode: 0, ResultDesc: 'OK' });
+      return;
     }
     const getItem = (arr: { Name: string; Value: string }[] | undefined, name: string) =>
       arr?.find((i) => i.Name === name)?.Value;
@@ -67,13 +71,8 @@ serve(async (req) => {
         processed_at: new Date().toISOString(),
       })
       .eq('checkout_request_id', checkoutRequestId);
-    return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: 'OK' }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    res.status(200).json({ ResultCode: 0, ResultDesc: 'OK' });
   } catch {
-    return new Response(JSON.stringify({ ResultCode: 1, ResultDesc: 'Error' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    res.status(500).json({ ResultCode: 1, ResultDesc: 'Error' });
   }
-});
+}
