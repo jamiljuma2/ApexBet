@@ -60,6 +60,9 @@ export default function HomePage() {
           </Link>
         </motion.div>
       </section>
+    <footer className="w-full py-4 mt-8 text-center text-xs text-gray-400 bg-transparent">
+      &copy; {new Date().getFullYear()} ApexBet. All rights reserved.
+    </footer>
     </main>
   );
 }
