@@ -12,7 +12,7 @@ export default async function TransactionsPage() {
     .order('created_at', { ascending: false })
     .limit(100);
   return (
-    <div>
+    <div className="pt-24">
       <h1 className="text-2xl font-bold text-white mb-4">Transaction history</h1>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
