@@ -45,7 +45,7 @@ export function MobileNav({ user }: { user: User }) {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-apex-dark border-t border-apex-muted z-50 flex flex-col md:hidden">
+    <nav className="fixed top-0 left-0 w-full bg-apex-dark border-b border-apex-muted z-50 flex flex-col md:hidden">
       {/* Wallet balance and actions */}
       <div className="flex flex-col items-center justify-center gap-1 bg-apex-muted/60 rounded px-3 py-1 w-full">
         <div className="flex items-center gap-2">

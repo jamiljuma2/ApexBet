@@ -18,7 +18,7 @@ export default async function DashboardLayout({
       <div className="hidden md:block">
         <DesktopNav user={user} />
       </div>
-      {/* Bottom navigation bar for mobile */}
+      {/* Top navigation bar for mobile */}
       <div className="md:hidden">
         <MobileNav user={user} />
       </div>
