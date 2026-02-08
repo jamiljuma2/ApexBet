@@ -56,14 +56,6 @@ export function MobileNav({ user }: { user: User }) {
           <Link href="/dashboard/deposit" className="btn-primary text-xs px-3 py-1 ml-2">Deposit</Link>
           <Link href="/dashboard/withdraw" className="bg-apex-primary/10 text-apex-primary border border-apex-primary text-xs px-3 py-1 rounded-lg ml-1 hover:bg-apex-primary/20 transition-colors">Withdraw</Link>
         </div>
-        {/* Settings icon */}
-        <Link href="/dashboard/profile" aria-label="Settings" className="p-2 rounded-full hover:bg-apex-primary/20 transition-colors">
-          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-apex-primary">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4" />
-            <path d="M12 16h.01" />
-          </svg>
-        </Link>
         {/* Toggle icon */}
         <button
           aria-label="Toggle account menu"
