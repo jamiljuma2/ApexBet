@@ -11,7 +11,7 @@ export default async function ProfilePage() {
     .eq('id', user.id)
     .single();
   return (
-    <div className="px-3 sm:px-4 py-6 max-w-xl mx-auto">
+    <div className="px-3 sm:px-4 pt-24 pb-6 max-w-xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold text-white mb-3 text-center sm:text-left">Profile & limits</h1>
       <div className="card-apex p-4 sm:p-6 w-full">
         <ProfileForm profile={profile} email={user.email ?? ''} />
