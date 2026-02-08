@@ -13,7 +13,7 @@ export default async function BetsPage() {
     .order('created_at', { ascending: false })
     .limit(50);
   return (
-    <div>
+    <div className="pt-24">
       <h1 className="text-2xl font-bold text-white mb-4">Betting history</h1>
       <div className="space-y-3">
         {slips?.map((slip) => (
