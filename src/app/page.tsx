@@ -9,8 +9,9 @@ export default function HomePage() {
       <header className="border-b border-apex-muted/50">
         <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
           <div className="flex flex-row w-full items-center justify-between">
-            <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-bold text-apex-primary text-center sm:text-left">
-              ApexBet
+            <Link href="/" className="flex items-center gap-3">
+              <img src="/apexbet-logo.png" alt="ApexBet Logo" className="h-16 w-auto sm:h-20 md:h-24 drop-shadow-lg rounded-2xl" />
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-apex-primary text-center sm:text-left">ApexBet</span>
             </Link>
             <nav className="flex flex-row gap-1 sm:gap-4 items-center">
               <Link href="/auth/login" className="text-apex-primary hover:underline text-center text-sm sm:text-base px-4 py-1 rounded whitespace-nowrap">
