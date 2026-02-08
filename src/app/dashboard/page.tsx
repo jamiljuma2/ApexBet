@@ -7,13 +7,6 @@ export default async function DashboardPage() {
     .from('profiles')
     .select('full_name')
     .single();
-  const { data: wallet } = await supabase
-    .from('wallets')
-    .select('balance_kes')
-    .single();
-
-  const balance = wallet?.balance_kes ?? 0;
-
   return (
     <div className="px-2 sm:px-4 py-4 max-w-3xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 text-center sm:text-left">
@@ -22,21 +15,6 @@ export default async function DashboardPage() {
       <p className="text-gray-400 mb-4 sm:mb-6 text-center sm:text-left">Manage your bets and wallet.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
-        <div className="card-apex p-3 sm:p-4">
-          <p className="text-gray-400 text-xs sm:text-sm">Wallet balance</p>
-          <p className="text-xl sm:text-2xl font-bold text-apex-primary">KES {Number(balance).toLocaleString()}</p>
-          <div className="mt-3 flex flex-col sm:flex-row gap-2">
-            <Link href="/dashboard/deposit" className="btn-primary text-xs sm:text-sm py-1 px-2 sm:py-1.5 sm:px-3 w-full sm:w-auto">
-              Deposit
-            </Link>
-            <Link
-              href="/dashboard/withdraw"
-              className="bg-apex-muted hover:bg-apex-primary/20 text-white border border-apex-primary text-xs sm:text-sm py-1 px-2 sm:py-1.5 sm:px-3 rounded-lg w-full sm:w-auto"
-            >
-              Withdraw
-            </Link>
-          </div>
-        </div>
         <Link href="/sports" className="card-apex block hover:border-apex-primary/50 transition-colors p-3 sm:p-4 text-center sm:text-left">
           <p className="text-gray-400 text-xs sm:text-sm">Sports</p>
           <p className="text-lg sm:text-xl font-bold text-white">Football, Basketball, Tennis</p>
