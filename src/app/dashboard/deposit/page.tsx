@@ -39,7 +39,6 @@ export default function DepositPage() {
 
   return (
     <div className="mt-16">
-      <h1 className="text-2xl font-bold text-white mb-4">Deposit via M-Pesa</h1>
       <div className="card-apex max-w-md">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
