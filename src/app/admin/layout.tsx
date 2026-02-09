@@ -18,22 +18,18 @@ export default async function AdminLayout({
   if (!profile || !ADMIN_ROLES.includes(profile.role)) redirect('/dashboard');
 
   return (
-    <div className="min-h-screen bg-apex-dark flex">
-      <aside className="w-56 bg-apex-card border-r border-apex-muted p-4">
-        <Link href="/admin" className="text-lg font-bold text-apex-primary block mb-4">
-          ApexBet Admin
-        </Link>
-        <nav className="space-y-1">
-          <Link href="/admin" className="block py-2 text-gray-300 hover:text-apex-primary">Dashboard</Link>
-          <Link href="/admin/users" className="block py-2 text-gray-300 hover:text-apex-primary">Users</Link>
-          <Link href="/admin/bets" className="block py-2 text-gray-300 hover:text-apex-primary">Bets</Link>
-          <Link href="/admin/transactions" className="block py-2 text-gray-300 hover:text-apex-primary">Transactions</Link>
-          <Link href="/admin/events" className="block py-2 text-gray-300 hover:text-apex-primary">Events</Link>
-          <Link href="/admin/jackpots" className="block py-2 text-gray-300 hover:text-apex-primary">Jackpots</Link>
-          <Link href="/admin/audit" className="block py-2 text-gray-300 hover:text-apex-primary">Audit logs</Link>
-          <Link href="/dashboard" className="block py-2 text-gray-500 text-sm mt-4">← Back to app</Link>
-        </nav>
-      </aside>
+    <div className="min-h-screen bg-apex-dark flex flex-col">
+      <nav className="w-full bg-apex-card border-b border-apex-muted px-4 py-2 flex flex-wrap items-center gap-2 md:gap-4">
+        <Link href="/admin" className="text-lg font-bold text-apex-primary mr-4">ApexBet Admin</Link>
+        <Link href="/admin" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Dashboard</Link>
+        <Link href="/admin/users" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Users</Link>
+        <Link href="/admin/bets" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Bets</Link>
+        <Link href="/admin/transactions" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Transactions</Link>
+        <Link href="/admin/events" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Events</Link>
+        <Link href="/admin/jackpots" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Jackpots</Link>
+        <Link href="/admin/audit" className="py-2 px-3 rounded hover:bg-apex-primary/10 text-gray-300 hover:text-apex-primary transition">Audit logs</Link>
+        <Link href="/dashboard" className="ml-auto py-2 px-3 rounded text-gray-500 text-sm hover:text-apex-primary hover:bg-apex-primary/10 transition">← Back to app</Link>
+      </nav>
       <main className="flex-1 p-6 overflow-auto">{children}</main>
     </div>
   );
