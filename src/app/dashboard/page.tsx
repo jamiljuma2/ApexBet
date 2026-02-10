@@ -8,7 +8,7 @@ export default async function DashboardPage() {
     .select('full_name')
     .single();
   return (
-    <div className="px-2 sm:px-4 py-4 max-w-3xl mx-auto">
+    <div className="px-2 sm:px-4 py-4 max-w-3xl mx-auto pt-16">
       <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 text-center sm:text-left">
         Welcome back{profile?.full_name ? `, ${profile.full_name}` : ''}
       </h1>
