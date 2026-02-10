@@ -32,7 +32,7 @@ export function MobileNav({ user }: { user: User }) {
   }, []);
 
   // Split nav for hierarchy
-  const bettingNav = nav.slice(1, 4); // Sports, Live, Jackpots
+  const bettingNav = nav.slice(0, 4); // Home, Sports, Live, Jackpots
   const accountNav = nav.slice(4); // My Bets, Transactions, Profile
 
   // Find active index for indicator
