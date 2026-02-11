@@ -54,7 +54,7 @@ export default function WithdrawPage() {
 
   return (
     <div className="pt-20 md:pt-0 min-h-screen flex flex-col items-center bg-apex-dark">
-      <h1 className="text-2xl font-bold text-white mb-4">Withdraw to M-Pesa</h1>
+      {/* Removed heading as requested */}
       {balance != null && (
         <p className="text-gray-400 mb-4">Available: KES {balance.toLocaleString()}</p>
       )}
