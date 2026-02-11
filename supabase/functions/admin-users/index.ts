@@ -16,6 +16,17 @@ interface AdminUser {
 }
 
 serve(async (req: Request) => {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
   // Auth check (admin only)
   // @ts-ignore: Deno runtime provides Deno.env
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -29,7 +40,10 @@ serve(async (req: Request) => {
   if (!authHeader) return new Response("Unauthorized", { status: 401 });
   const jwt = authHeader.replace("Bearer ", "");
   const { data: user, error } = await supabase.auth.getUser(jwt);
-  const userRole = user?.user?.role as string | undefined;
+  // Debug log: print user object
+  console.log('Edge Function user object:', JSON.stringify(user));
+  // Check for admin role in user_metadata or raw_user_meta_data
+  const userRole = user?.user?.user_metadata?.role || user?.user?.raw_user_meta_data?.role;
   if (error || !user || !(userRole === "admin" || userRole === "super_admin")) {
     return new Response("Forbidden", { status: 403 });
   }
@@ -53,7 +67,15 @@ serve(async (req: Request) => {
 
   const { data, count, error: queryError } = await query;
   if (queryError) {
-    return new Response(JSON.stringify({ error: queryError.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: queryError.message }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   }
 
   // Flatten wallet balance
@@ -69,6 +91,11 @@ serve(async (req: Request) => {
   }));
 
   return new Response(JSON.stringify({ users, total: count }), {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
   });
 });

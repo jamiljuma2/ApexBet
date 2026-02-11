@@ -1,20 +1,38 @@
-import React from 'react';
+
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminCard from '@/components/admin/AdminCard';
 
-const kpis = [
-  { title: 'Total Users', value: '12,340', icon: '👤' },
-  { title: 'Active Bets', value: '1,234', icon: '🎫' },
-  { title: 'Daily Revenue', value: '$12,345', icon: '💰' },
-  { title: 'Pending Withdrawals', value: '$2,100', icon: '⏳' },
-];
+export default async function DashboardPage() {
+  let metrics = null;
+  let error = null;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/admin-metrics`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to fetch metrics');
+    metrics = await res.json();
+  } catch (e) {
+    error = (e as Error).message;
+  }
 
-const DashboardPage: React.FC = () => {
+  const kpis = metrics
+    ? [
+        { title: 'Total Users', value: metrics.total_users, icon: '👤' },
+        { title: 'Active Bets', value: metrics.active_bets, icon: '🎫' },
+        { title: 'Daily Revenue', value: `KES ${Number(metrics.daily_revenue).toLocaleString()}`, icon: '💰' },
+        { title: 'Pending Withdrawals', value: metrics.pending_withdrawals, icon: '⏳' },
+      ]
+    : [];
+
   return (
     <AdminLayout>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {kpis.map((kpi) => (
-          <AdminCard key={kpi.title} title={kpi.title} value={kpi.value} icon={kpi.icon} />
+          <AdminCard key={kpi.title} title={kpi.title} value={kpi.value} icon={kpi.icon} loading={!metrics && !error} error={error ?? undefined} />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -32,6 +50,4 @@ const DashboardPage: React.FC = () => {
       </div>
     </AdminLayout>
   );
-};
-
-export default DashboardPage;
+}

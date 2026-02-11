@@ -53,12 +53,12 @@ export default function WithdrawPage() {
   }
 
   return (
-    <div>
+    <div className="pt-20 md:pt-0 min-h-screen flex flex-col items-center bg-apex-dark">
       <h1 className="text-2xl font-bold text-white mb-4">Withdraw to M-Pesa</h1>
       {balance != null && (
         <p className="text-gray-400 mb-4">Available: KES {balance.toLocaleString()}</p>
       )}
-      <div className="card-apex max-w-md">
+      <div className="card-apex max-w-md w-full">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm text-gray-300 mb-1">Phone (254...)</label>
